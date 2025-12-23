@@ -1,10 +1,71 @@
+<script setup>
+import { ref } from "vue";
+import api from "../helpers/api";
+import { useRouter } from "vue-router";
+
+const email = ref("");
+const password = ref("");
+const errorMessage = ref("");
+const router = useRouter();
+
+const handleLogin = async () => {
+    try {
+        // Note: FastAPI OAuth2 expects form-data, not JSON by default
+        const formData = new FormData();
+        formData.append("username", email.value); // FastAPI uses 'username' field
+        formData.append("password", password.value);
+
+        const response = await api.post("users/token", formData);
+
+        // Save the token!
+        localStorage.setItem("token", response.data.access_token);
+
+        // Redirect to home or admin dashboard
+        router.push("/");
+    } catch (error) {
+        errorMessage.value = "Invalid credentials. Unauthorized access logged.";
+    }
+};
+</script>
+
 <template>
-    <div class="flex justify-center items-center h-64">
-        <div class="bg-white p-8 rounded shadow-lg w-96">
-            <h2 class="text-2xl mb-4">Login</h2>
-            <button class="bg-orange-700 text-white px-4 py-2 rounded">
-                Sign In
+    <div class="flex justify-center items-center mt-20">
+        <form
+            @submit.prevent="handleLogin"
+            class="bg-white p-8 rounded shadow-lg w-96"
+        >
+            <h2 class="text-2xl font-bold mb-6 text-blue-800">Staff Login</h2>
+
+            <div class="mb-4">
+                <label class="block text-gray-700">Email</label>
+                <input
+                    v-model="email"
+                    type="email"
+                    class="w-full border p-2 rounded mt-1"
+                    required
+                />
+            </div>
+
+            <div class="mb-6">
+                <label class="block text-gray-700">Password</label>
+                <input
+                    v-model="password"
+                    type="password"
+                    class="w-full border p-2 rounded mt-1"
+                    required
+                />
+            </div>
+
+            <button
+                type="submit"
+                class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition"
+            >
+                Enter Cockpit
             </button>
-        </div>
+
+            <p v-if="errorMessage" class="text-red-500 mt-4 text-sm">
+                {{ errorMessage }}
+            </p>
+        </form>
     </div>
 </template>
