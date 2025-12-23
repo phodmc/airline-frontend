@@ -4,10 +4,10 @@ import api from "../helpers/api";
 
 const aircrafts = ref([]);
 const airports = ref([]);
+const isSubmitting = ref(false);
 const statusMsg = ref("");
 const statusClass = ref("");
-
-const form = ref({
+const initialFormState = {
     FlightNumber: "",
     DepartureAirportID: null,
     ArrivalAirportID: null,
@@ -20,6 +20,10 @@ const form = ref({
     economyBasePrice: 0,
     businessSeats: 0,
     economySeats: 0,
+};
+
+const form = ref({
+    ...initialFormState,
 });
 
 // fetch aircraft
@@ -36,6 +40,7 @@ onMounted(async () => {
 });
 
 const createFlight = async () => {
+    isSubmitting.value = true;
     const token = localStorage.getItem("token");
     if (!token) {
         statusMsg.value = "Session expired. Please login again";
@@ -63,11 +68,14 @@ const createFlight = async () => {
         statusMsg.value = "Flight successfully dispatched!";
         statusClass.value = "bg-green-100 text-green-700";
         // Clear form
+        form.value = { FlightNumber: "", ...initialFormState };
     } catch (err) {
         statusMsg.value =
             err.response?.data?.detail ||
             "Error: Check your admin permissions.";
         statusClass.value = "bg-red-100 text-red-700";
+    } finally {
+        isSubmitting.value = false;
     }
 };
 </script>
