@@ -1,7 +1,7 @@
 <template>
     <div class="min-h-screen bg-gray-100">
         <header
-            class="bg-orange-600 text-white p-4 shadow-md flex justify-between"
+            class="bg-blue-600 text-white p-4 shadow-md flex justify-between"
         >
             <h1 class="text-2xl font-bold">Aries Airways</h1>
             <nav>
