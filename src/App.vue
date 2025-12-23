@@ -1,47 +1,16 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+    <div class="min-h-screen bg-gray-100">
+        <header class="bg-blue-600 text-white p-4 shadow-md">
+            <h1 class="text-2xl font-bold">Aries Airways</h1>
+        </header>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+        <main class="p-6">
+            <h2 class="text-xl">Welcome to the Cockpit</h2>
+            <p>The frontend is officially connected.</p>
+        </main>
     </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
+<script setup>
+// Logic will go here later
+</script>
