@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import api from "../helpers/api";
+import { checkLogin } from "../helpers/auth";
 import { useRouter } from "vue-router";
 
 const email = ref("");
@@ -20,8 +21,10 @@ const handleLogin = async () => {
         // Save the token!
         localStorage.setItem("token", response.data.access_token);
 
+        checkLogin();
+
         // Redirect to home or admin dashboard
-        router.push("/");
+        await router.push("/");
     } catch (error) {
         errorMessage.value = "Invalid credentials. Unauthorized access logged.";
     }
