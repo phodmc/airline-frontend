@@ -1,22 +1,11 @@
 <script setup>
 // Logic will go here later
 
-import { ref, onMounted, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { checkLogin, logout, isLoggedIn } from "./helpers/auth";
+import { onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
 
-const isLoggedIn = ref(false);
-const router = useRouter();
 const route = useRoute();
-
-const checkLogin = () => {
-    isLoggedIn.value = !!localStorage.getItem("token");
-};
-
-const logout = () => {
-    localStorage.removeItem("token");
-    isLoggedIn.value = false;
-    router.push("/login");
-};
 
 watch(() => route.path, checkLogin);
 onMounted(checkLogin);
