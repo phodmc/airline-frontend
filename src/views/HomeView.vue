@@ -13,12 +13,18 @@ const searchFilters = ref({
 });
 
 const fetchFlights = async () => {
+    // check if origin is empty
+    if (!searchFilters.value.origin_code.trim()) {
+        alert("Please select a departure airport (From) to begin your search.");
+        return; // Stop the function here
+    }
+
     loading.value = true;
     searchPressed.value = true;
     const params = { ...searchFilters.value };
 
     if (!params.travel_date) delete params.travel_date;
-    // if (!params.origin_code) delete params.origin_code;
+    if (!params.origin_code) delete params.origin_code;
     if (!params.destination_code) delete params.destination_code;
 
     try {
@@ -70,7 +76,7 @@ const getMinPrice = (inventory) => {
                 <div class="flex flex-col">
                     <label
                         class="text-xs font-bold text-gray-500 uppercase mb-1"
-                        >From</label
+                        >From <span class="text-red-500">*</span></label
                     >
                     <input
                         v-model="searchFilters.origin_code"
