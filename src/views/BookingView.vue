@@ -58,7 +58,7 @@ const submitBooking = async (inventoryId) => {
 
         // Success! Show PNR and redirect
         alert(`Booking Confirmed! PNR: ${res.data.PNR}`);
-        router.push(`/success/:${res.data.PNR}`);
+        router.push(`/success/${res.data.PNR}`);
     } catch (err) {
         console.error(err);
         alert(err.response?.data?.detail || "Check your seat availability.");
