@@ -4,7 +4,8 @@ const route = useRoute();
 const router = useRouter();
 
 // Grab the PNR from the URL query: /success?pnr=ABCD12
-const pnr = route.query.pnr || "XXXXXX";
+const pnr = route.params.pnr || "XXXXXX";
+console.log(pnr);
 </script>
 
 <template>
@@ -12,7 +13,7 @@ const pnr = route.query.pnr || "XXXXXX";
         <div
             class="max-w-md w-full bg-white rounded-3xl shadow-xl overflow-hidden"
         >
-            <div class="bg-green-500 p-8 text-center">
+            <div class="bg-blue-500 p-8 text-center">
                 <div
                     class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full mb-4 shadow-sm"
                 >

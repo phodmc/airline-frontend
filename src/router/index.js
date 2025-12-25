@@ -8,7 +8,7 @@ import SuccessView from "@/views/SuccessView.vue";
 const routes = [
   { path: "/", component: HomeView },
   { path: "/login", component: LoginView },
-  { path: "/success:id", component: SuccessView },
+  { path: "/success/:pnr", component: SuccessView },
   { path: "/admin", component: AdminView, meta: { requiresAuth: true } },
   { path: "/book/:id", component: BookingView, meta: { requiresAuth: true } },
 ];
