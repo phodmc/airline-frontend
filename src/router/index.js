@@ -3,10 +3,12 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import AdminView from "@/views/AdminView.vue";
 import BookingView from "@/views/BookingView.vue";
+import SuccessView from "@/views/SuccessView.vue";
 
 const routes = [
   { path: "/", component: HomeView },
   { path: "/login", component: LoginView },
+  { path: "/success", component: SuccessView },
   { path: "/admin", component: AdminView, meta: { requiresAuth: true } },
   { path: "/book/:id", component: BookingView, meta: { requiresAuth: true } },
 ];
