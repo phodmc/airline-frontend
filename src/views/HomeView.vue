@@ -2,6 +2,8 @@
 import { ref, onMounted } from "vue";
 import api from "../helpers/api"; // Import our axios instance
 
+import { useRouter } from "vue-router";
+
 const loading = ref(false);
 const searchPressed = ref(false);
 const flights = ref([]);
@@ -11,6 +13,8 @@ const searchFilters = ref({
     destination_code: "",
     travel_date: "",
 });
+
+const router = useRouter();
 
 const fetchFlights = async () => {
     // check if origin is empty
@@ -270,6 +274,7 @@ const getMinPrice = (inventory) => {
                                 </p>
                             </div>
                             <button
+                                @click="router.push(`/book/${flight.FlightID}`)"
                                 class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition-transform active:scale-95 shadow-lg"
                             >
                                 Book Now
