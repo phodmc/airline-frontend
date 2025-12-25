@@ -1,9 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import api from "../helpers/api";
 
 const route = useRoute();
+const router = useRouter();
 const flight = ref(null);
 
 const passengers = ref([
@@ -17,53 +18,48 @@ const passengers = ref([
     },
 ]);
 
+const addPassenger = () => {
+    passengers.value.push({
+        FirstName: "",
+        LastName: "",
+        DateOfBirth: "",
+        PassportNumber: "",
+        InventoryID: null,
+        SeatNumber: "",
+    });
+};
+
+const removePassenger = (index) => {
+    if (passengers.value.length > 1) {
+        passengers.value.splice(index, 1);
+    }
+};
+
 const submitBooking = async (inventoryId) => {
-    // Update the InventoryID for all passengers in this set
-    passengers.value.forEach((p) => (p.InventoryID = inventoryId));
+    // 1. Validate that names aren't empty
+    const isValid = passengers.value.every((p) => p.FirstName && p.LastName);
+    if (!isValid) {
+        alert("Please fill in all passenger names.");
+        return;
+    }
+
+    // 2. Map the chosen class ID to everyone in the group
+    const finalPassengers = passengers.value.map((p) => ({
+        ...p,
+        InventoryID: inventoryId,
+        SeatNumber: p.SeatNumber || "TBD", // Default if empty
+    }));
 
     try {
-        const payload = {
-            passengers: passengers.value,
-        };
-
+        const payload = { passengers: finalPassengers };
         const res = await api.post("/bookings", payload);
-        alert(`Success! Your PNR is: ${res.data.PNR}`);
-        router.push("/");
+
+        // Success! Show PNR and redirect
+        alert(`Booking Confirmed! PNR: ${res.data.PNR}`);
+        router.push("/success");
     } catch (err) {
-        alert("Error: " + (err.response?.data?.detail || "Booking failed"));
-    }
-};
-
-const handleBooking = async (item) => {
-    // item is the specific inventory object { ClassCode: 'Economy', BaseFare: 200, ... }
-    const confirmed = confirm(
-        `Confirm booking for ${item.ClassCode} at $${item.BaseFare}?`,
-    );
-
-    if (confirmed) {
-        try {
-            await api.post("/bookings", {
-                flight_id: flight.value.FlightID,
-                class_code: item.ClassCode,
-            });
-            alert("Booking Successful!");
-            router.push("/my-bookings"); // Or wherever you track history
-        } catch (err) {
-            alert(err.response?.data?.detail || "Error creating booking");
-        }
-    }
-};
-
-const confirmBooking = async (classCode) => {
-    try {
-        await api.post("/bookings", {
-            flight_id: flight.value.FlightID,
-            class_code: classCode,
-        });
-        alert("Pack your bags! Booking confirmed.");
-        router.push("/profile"); // Send them to see their tickets
-    } catch (err) {
-        alert("Booking failed: " + err.response.data.detail);
+        console.error(err);
+        alert(err.response?.data?.detail || "Check your seat availability.");
     }
 };
 
@@ -96,32 +92,79 @@ onMounted(async () => {
             </div>
         </div>
 
-        <div class="space-y-4 mb-8">
-            <h2 class="font-bold text-2xl pb-1 pt-3">Passenger Information</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <input
-                    v-model="passengers[0].FirstName"
-                    placeholder="First Name"
-                    class="border border-blue-600 p-2 rounded"
-                />
-                <input
-                    v-model="passengers[0].LastName"
-                    placeholder="Last Name"
-                    class="border border-blue-600 p-2 rounded"
-                />
+        <div class="space-y-8 mt-7">
+            <div
+                v-for="(passenger, index) in passengers"
+                :key="index"
+                class="p-6 border rounded-xl bg-gray-50 relative"
+            >
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-blue-800 tracking-tight">
+                        Passenger {{ index + 1 }}
+                    </h3>
+                    <button
+                        v-if="passengers.length > 1"
+                        @click="removePassenger(index)"
+                        class="text-red-500 text-sm hover:underline"
+                    >
+                        Remove
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex flex-col">
+                        <label
+                            class="text-xs font-bold text-gray-400 uppercase mb-1"
+                            >First Name</label
+                        >
+                        <input
+                            v-model="passenger.FirstName"
+                            class="border p-2 rounded-lg"
+                            placeholder="John"
+                        />
+                    </div>
+                    <div class="flex flex-col">
+                        <label
+                            class="text-xs font-bold text-gray-400 uppercase mb-1"
+                            >Last Name</label
+                        >
+                        <input
+                            v-model="passenger.LastName"
+                            class="border p-2 rounded-lg"
+                            placeholder="Doe"
+                        />
+                    </div>
+                    <div class="flex flex-col">
+                        <label
+                            class="text-xs font-bold text-gray-400 uppercase mb-1"
+                            >Passport Number</label
+                        >
+                        <input
+                            v-model="passenger.PassportNumber"
+                            class="border p-2 rounded-lg"
+                            placeholder="A1234567"
+                        />
+                    </div>
+                    <div class="flex flex-col">
+                        <label
+                            class="text-xs font-bold text-gray-400 uppercase mb-1"
+                            >Date of Birth</label
+                        >
+                        <input
+                            v-model="passenger.DateOfBirth"
+                            type="date"
+                            class="border p-2 rounded-lg"
+                        />
+                    </div>
+                </div>
             </div>
-            <input
-                v-model="passengers[0].PassportNumber"
-                placeholder="Passport Number"
-                class="border border-blue-600 p-2 rounded w-full"
-            />
-            <label for="db">date of birth</label>
-            <input
-                id="db"
-                v-model="passengers[0].DateOfBirth"
-                type="date"
-                class="border border-blue-600 p-2 rounded w-full"
-            />
+
+            <button
+                @click="addPassenger"
+                class="w-full py-3 border-2 border-dashed border-blue-300 text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition"
+            >
+                + Add Another Passenger
+            </button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -129,7 +172,7 @@ onMounted(async () => {
                 v-for="item in flight.inventory_items"
                 :key="item.ClassCode"
                 class="border-2 p-6 rounded-xl hover:border-blue-500 transition cursor-pointer bg-white"
-                @click="confirmBooking(item.ClassCode)"
+                @click="submitBooking(item.InventoryID)"
             >
                 <h3 class="text-xl font-bold">
                     {{ item.ClassCode == "Y" ? "Economy" : "Business" }}
