@@ -8,7 +8,7 @@ const routes = [
   { path: "/", component: HomeView },
   { path: "/login", component: LoginView },
   { path: "/admin", component: AdminView, meta: { requiresAuth: true } },
-  { path: "/book/:id", component: BookingView, meta: { requiresAuth: true } },
+  { path: "/book/:id", component: BookingView },
 ];
 
 const router = createRouter({
