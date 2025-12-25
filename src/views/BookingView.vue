@@ -1,11 +1,12 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import api from "../helpers/api";
 
 const route = useRoute();
 const router = useRouter();
 const flight = ref(null);
+const isSubmitting = ref(false);
 
 const passengers = ref([
     {
@@ -50,6 +51,7 @@ const submitBooking = async (inventoryId) => {
         SeatNumber: p.SeatNumber || "TBD", // Default if empty
     }));
 
+    isSubmitting.value = true;
     try {
         const payload = { passengers: finalPassengers };
         const res = await api.post("/bookings", payload);
@@ -60,7 +62,13 @@ const submitBooking = async (inventoryId) => {
     } catch (err) {
         console.error(err);
         alert(err.response?.data?.detail || "Check your seat availability.");
+    } finally {
+        isSubmitting.value = false;
     }
+};
+
+const calculateTotal = (baseFare) => {
+    return (baseFare * passengers.value.length).toLocaleString();
 };
 
 onMounted(async () => {
@@ -179,14 +187,28 @@ onMounted(async () => {
                 </h3>
                 <p class="text-3xl font-black text-blue-600 mt-2">
                     ${{ item.BaseFare }}
+                    <span class="text-sm font-normal text-gray-400"
+                        >/ per person</span
+                    >
                 </p>
-                <p class="text-sm text-gray-500 mt-1">
-                    {{ item.TotalSeats }} seats remaining
-                </p>
-                <button
-                    class="w-full mt-4 bg-gray-800 text-white py-2 rounded-lg font-bold"
+
+                <div
+                    v-if="passengers.length > 1"
+                    class="mt-2 p-2 bg-blue-50 rounded text-blue-800 font-bold"
                 >
-                    Select {{ item.ClassCode == "Y" ? "Economy" : "Business" }}
+                    {{ passengers.length }} travelers: ${{
+                        calculateTotal(item.BaseFare)
+                    }}
+                </div>
+
+                <button
+                    :disabled="
+                        isSubmitting ||
+                        item.TotalSeats - item.SeatsBooked < passengers.length
+                    "
+                    class="w-full mt-4 bg-gray-800 text-white py-2 rounded-lg cursor-pointer font-bold disabled:bg-gray-400"
+                >
+                    {{ isSubmitting ? "Processing..." : "Confirm Booking" }}
                 </button>
             </div>
         </div>
