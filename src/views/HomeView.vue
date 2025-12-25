@@ -2,7 +2,8 @@
 import { ref, onMounted } from "vue";
 import api from "../helpers/api"; // Import our axios instance
 
-const loading = ref(true);
+const loading = ref(false);
+const searchPressed = ref(false);
 const flights = ref([]);
 const airports = ref([]);
 const searchFilters = ref({
@@ -13,10 +14,11 @@ const searchFilters = ref({
 
 const fetchFlights = async () => {
     loading.value = true;
+    searchPressed.value = true;
     const params = { ...searchFilters.value };
 
     if (!params.travel_date) delete params.travel_date;
-    if (!params.origin_code) delete params.origin_code;
+    // if (!params.origin_code) delete params.origin_code;
     if (!params.destination_code) delete params.destination_code;
 
     try {
@@ -35,14 +37,16 @@ const clearFilters = () => {
         destination_code: "",
         travel_date: "",
     };
-    fetchFlights();
+    searchPressed.value = false;
+    loading.value = false;
+    // fetchFlights();
 };
 
 onMounted(async () => {
     try {
         const airportRes = await api.get("/airports");
         airports.value = airportRes.data;
-        await fetchFlights();
+        // await fetchFlights();
     } catch (err) {
         console.error("Initial load failed", err);
     }
@@ -143,14 +147,16 @@ const getMinPrice = (inventory) => {
                 <h2 class="text-3xl font-bold text-blue-900">
                     Available Flights
                 </h2>
+
                 <div
-                    v-if="!loading"
+                    v-if="!loading && searchPressed"
                     class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase"
                 >
                     {{ flights.length }} Found
                 </div>
             </div>
 
+            <!-- loading or empty page -->
             <div
                 v-if="loading"
                 class="flex flex-col items-center py-20 text-gray-400"
@@ -162,7 +168,20 @@ const getMinPrice = (inventory) => {
             </div>
 
             <div
-                v-else-if="flights.length === 0"
+                v-else-if="!loading && !searchPressed"
+                class="text-center py-20"
+            >
+                <div class="text-6xl mb-4">🌍</div>
+                <h3 class="text-xl font-bold text-gray-700">
+                    Where would you like to go?
+                </h3>
+                <p class="text-gray-500">
+                    Enter an origin and destination to view available flights.
+                </p>
+            </div>
+
+            <div
+                v-else-if="!loading && searchPressed && flights.length === 0"
                 class="bg-white p-12 rounded-xl text-center border-2 border-dashed border-gray-200"
             >
                 <p class="text-gray-500 text-lg">
