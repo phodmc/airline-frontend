@@ -30,6 +30,15 @@ const fetchFlights = async () => {
     }
 };
 
+const clearFilters = () => {
+    searchFilters.value = {
+        origin_code: "",
+        destination_code: "",
+        travel_date: "",
+    };
+    fetchFlights(); // Refresh to show all flights
+};
+
 onMounted(async () => {
     const airportRes = await api.get("/airports");
     airports.value = airportRes.data;
@@ -93,9 +102,9 @@ const getMinPrice = (inventory) => {
         </div>
 
         <h2 class="text-3xl font-bold mb-4 text-blue-800">Available Flights</h2>
-
         <div v-if="loading" class="text-gray-500">Scanning the skies...</div>
 
+        <!-- flight card(s) -->
         <div v-else class="grid gap-4">
             <div
                 v-for="flight in flights"
