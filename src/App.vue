@@ -1,7 +1,7 @@
 <script setup>
 // Logic will go here later
 
-import { checkLogin, isLoggedIn } from "./helpers/auth";
+import { checkLogin, isLoggedIn, isAdmin } from "./helpers/auth";
 import { onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -37,8 +37,17 @@ onMounted(checkLogin);
                     >Login</RouterLink
                 >
                 <template v-else>
-                    <RouterLink to="/admin" class="mx-2 hover:underline"
+                    <RouterLink
+                        v-if="isAdmin"
+                        to="/admin"
+                        class="mx-2 hover:underline"
                         >Admin Panel</RouterLink
+                    >
+                    <RouterLink
+                        v-else
+                        to="/profile"
+                        class="mx-2 hover:underline"
+                        >Profile</RouterLink
                     >
                     <button
                         @click="logout"
