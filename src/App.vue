@@ -45,9 +45,9 @@ onMounted(checkLogin);
                     >
                     <RouterLink
                         v-else
-                        to="/profile"
+                        to="/my-bookings"
                         class="mx-2 hover:underline"
-                        >Booking</RouterLink
+                        >My Bookings</RouterLink
                     >
                     <button
                         @click="logout"
