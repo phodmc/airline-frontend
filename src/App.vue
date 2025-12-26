@@ -47,11 +47,11 @@ onMounted(checkLogin);
                         v-else
                         to="/profile"
                         class="mx-2 hover:underline"
-                        >Profile</RouterLink
+                        >Booking</RouterLink
                     >
                     <button
                         @click="logout"
-                        class="text-red-200 hover:text-white"
+                        class="text-red-200 hover:text-white hover:bg-red-800 py-1.5 px-3 bg-red-500 rounded-sm"
                     >
                         Logout
                     </button>
