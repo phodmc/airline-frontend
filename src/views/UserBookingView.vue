@@ -48,16 +48,21 @@ onMounted(fetchBookings);
                 </p>
             </div>
 
-            <div v-else class="grid gap-6">
+            <div v-else class="grid gap-8">
                 <div
                     v-for="booking in bookings"
                     :key="booking.BookingID"
-                    class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow border-l-8 border-l-blue-500"
+                    class="bg-white px-6 py-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow border-l-8 border-l-blue-500"
                 >
                     <div
                         class="flex flex-col md:flex-row justify-between items-center gap-6"
                     >
                         <div class="flex-1">
+                            <div
+                                class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase max-w-fit mb-4"
+                            >
+                                Passengers: {{ booking.passengers.length }}
+                            </div>
                             <div class="flex items-center gap-2 mb-2">
                                 <span
                                     class="text-blue-600 text-2xl rounded font-bold uppercase"
