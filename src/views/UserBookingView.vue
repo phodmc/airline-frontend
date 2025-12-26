@@ -134,7 +134,7 @@ onMounted(fetchBookings);
                                     Price
                                 </p>
                                 <p
-                                    class="text-4xl font-black text-green-600 tracking-tighter"
+                                    class="text-4xl font-bold text-green-600 tracking-tighter"
                                 >
                                     {{ booking.TotalAmount }}
                                 </p>
