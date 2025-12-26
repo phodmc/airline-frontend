@@ -62,10 +62,13 @@ const showPassword = () => {
                     required
                     :type="inputType"
                 />
-                <input type="checkbox" name="showPassword" id="showPassword" />
-                <label @click="showPassword" class="ml-2" for="showPassword"
-                    >Show password</label
-                >
+                <input
+                    @click="showPassword"
+                    type="checkbox"
+                    name="showPassword"
+                    id="showPassword"
+                />
+                <label class="ml-2" for="showPassword">Show password</label>
             </div>
 
             <button
