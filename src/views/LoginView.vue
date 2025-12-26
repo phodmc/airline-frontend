@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import api from "../helpers/api";
-import { checkLogin } from "../helpers/auth";
+import { checkAdmin, checkLogin } from "../helpers/auth";
 import { useRouter } from "vue-router";
 
 const email = ref("");
@@ -23,6 +23,7 @@ const handleLogin = async () => {
         localStorage.setItem("token", response.data.access_token);
 
         checkLogin();
+        checkAdmin();
 
         // Redirect to home or admin dashboard
         await router.push("/");
