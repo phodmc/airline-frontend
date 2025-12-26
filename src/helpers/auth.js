@@ -1,9 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
 const isLoggedIn = ref(false);
-const router = useRouter();
 
 const checkLogin = () => {
   const token = localStorage.getItem("token");
@@ -30,10 +28,4 @@ const checkLogin = () => {
   }
 };
 
-const logout = () => {
-  localStorage.removeItem("token");
-  isLoggedIn.value = false;
-  router.push("/login");
-};
-
-export { checkLogin, logout, isLoggedIn };
+export { checkLogin, isLoggedIn };
