@@ -5,6 +5,7 @@ import { checkLogin } from "../helpers/auth";
 import { useRouter } from "vue-router";
 
 const email = ref("");
+const inputType = ref("password");
 const password = ref("");
 const errorMessage = ref("");
 const router = useRouter();
@@ -28,6 +29,10 @@ const handleLogin = async () => {
     } catch (error) {
         errorMessage.value = "Invalid credentials. Unauthorized access logged.";
     }
+};
+
+const showPassword = () => {
+    inputType.value = inputType.value === "password" ? "text" : "password";
 };
 </script>
 
@@ -53,10 +58,14 @@ const handleLogin = async () => {
                 <label class="block text-gray-700">Password</label>
                 <input
                     v-model="password"
-                    type="password"
                     class="w-full border p-2 rounded mt-1"
                     required
+                    :type="inputType"
                 />
+                <input type="checkbox" name="showPassword" id="showPassword" />
+                <label @click="showPassword" class="ml-2" for="showPassword"
+                    >Show password</label
+                >
             </div>
 
             <button
