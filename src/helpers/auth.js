@@ -1,7 +1,15 @@
 import { jwtDecode } from "jwt-decode";
 import { ref } from "vue";
+import api from "./api";
 
 const isLoggedIn = ref(false);
+const isAdmin = ref(false);
+
+const checkAdmin = async () => {
+  const res = await api.get("/users/me");
+  const currentUser = res.data;
+  isAdmin.value = currentUser.IsAdmin;
+};
 
 const checkLogin = () => {
   const token = localStorage.getItem("token");
@@ -28,4 +36,4 @@ const checkLogin = () => {
   }
 };
 
-export { checkLogin, isLoggedIn };
+export { checkLogin, isLoggedIn, isAdmin, checkAdmin };
