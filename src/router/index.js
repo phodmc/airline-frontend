@@ -6,10 +6,13 @@ import AdminView from "@/views/AdminView.vue";
 import BookingView from "@/views/BookingView.vue";
 import SuccessView from "@/views/SuccessView.vue";
 import UserBookingView from "@/views/UserBookingView.vue";
+import BoardingPassView from "@/views/BoardingPassView.vue";
 
 const routes = [
   { path: "/", component: HomeView },
   { path: "/login", component: LoginView },
+  { path: "/my-bookings/:pnr", component: BoardingPassView },
+
   { path: "/success/:pnr", component: SuccessView },
   {
     path: "/admin",
