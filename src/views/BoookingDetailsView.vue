@@ -9,6 +9,15 @@ const route = useRoute();
 const showCancelModal = ref(false);
 const selectedBooking = ref(null);
 const isCancelling = ref(false);
+const showEditModal = ref(false);
+const editingPassenger = ref(null);
+const editForm = ref({
+    FirstName: "",
+    LastName: "",
+    PassportNumber: "",
+    DateOfBirth: "",
+});
+
 // Grab the PNR from the URL query: /success?pnr=ABCD12
 const pnr = route.params.pnr || "XXXXXX";
 console.log(pnr);
@@ -125,6 +134,32 @@ const executeCancellation = async () => {
         isCancelling.value = false;
     }
 };
+
+// Open modal and pre-fill data
+const openEditPassenger = (passenger) => {
+    editingPassenger.value = passenger;
+    editForm.value = { ...passenger }; // Create a copy so we don't edit the UI live
+    showEditModal.value = true;
+};
+
+const savePassengerChanges = async () => {
+    try {
+        const id = editingPassenger.value.PassengerID;
+        // Your Backend PUT route: /passengers/{id}
+        await api.put(`/passengers/${id}`, editForm.value);
+
+        // Update the local UI state
+        editingPassenger.value.FirstName = editForm.value.FirstName;
+        editingPassenger.value.LastName = editForm.value.LastName;
+        editingPassenger.value.PassportNumber = editForm.value.PassportNumber;
+        editingPassenger.value.DateOfBirth = editForm.value.DateOfBirth;
+
+        showEditModal.value = false;
+        alert("Passenger details updated!");
+    } catch (err) {
+        alert("Failed to update passenger.");
+    }
+};
 onMounted(fetctBooking);
 </script>
 
@@ -182,11 +217,31 @@ onMounted(fetctBooking);
                         class="flex items-center border-2 border-dashed border-gray-200 rounded-2xl p-4 bg-gray-50 relative"
                     >
                         <div class="flex-grow">
-                            <p
+                            <span
                                 class="text-xs text-gray-400 font-bold uppercase"
                             >
                                 Passenger
-                            </p>
+                            </span>
+                            <button
+                                @click="openEditPassenger(p)"
+                                class="p-1.5 rounded-full hover:bg-blue-50 text-blue-400 hover:text-blue-600 transition-all duration-200 focus:opacity-100"
+                                title="Edit Passenger Details"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                                    />
+                                </svg>
+                            </button>
                             <h3 class="text-lg font-bold text-blue-900">
                                 {{ p.FirstName }} {{ p.LastName }}
                             </h3>
@@ -277,8 +332,7 @@ onMounted(fetctBooking);
         </div>
     </div>
 
-    <!-- modal -->
-
+    <!-- cancellation modal -->
     <div
         v-if="showCancelModal"
         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 bg-opacity-50 backdrop-blur-sm"
@@ -336,6 +390,93 @@ onMounted(fetctBooking);
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+    <!-- edit modal -->
+    <div
+        v-if="showEditModal"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/30 backdrop-blur-md"
+    >
+        <div
+            class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-white/20"
+        >
+            <div
+                class="p-6 border-b border-gray-100 flex justify-between items-center"
+            >
+                <h3 class="text-xl font-bold text-slate-800">Edit Passenger</h3>
+                <button
+                    @click="showEditModal = false"
+                    class="text-gray-400 hover:text-gray-600"
+                >
+                    ✕
+                </button>
+            </div>
+
+            <form @submit.prevent="savePassengerChanges" class="p-6 space-y-4">
+                <div>
+                    <label
+                        class="block text-xs font-bold text-gray-400 uppercase mb-1"
+                        >First Name</label
+                    >
+                    <input
+                        v-model="editForm.FirstName"
+                        type="text"
+                        class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                </div>
+
+                <div>
+                    <label
+                        class="block text-xs font-bold text-gray-400 uppercase mb-1"
+                        >Last Name</label
+                    >
+                    <input
+                        v-model="editForm.LastName"
+                        type="text"
+                        class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                </div>
+
+                <div>
+                    <label
+                        class="block text-xs font-bold text-gray-400 uppercase mb-1"
+                        >Passport Number</label
+                    >
+                    <input
+                        v-model="editForm.PassportNumber"
+                        type="text"
+                        class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                </div>
+
+                <div>
+                    <label
+                        class="block text-xs font-bold text-gray-400 uppercase mb-1"
+                        >Passport Number</label
+                    >
+                    <input
+                        v-model="editForm.DateOfBirth"
+                        type="date"
+                        class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                </div>
+
+                <div class="pt-4 flex gap-3">
+                    <button
+                        type="button"
+                        @click="showEditModal = false"
+                        class="flex-1 py-3 px-4 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        type="submit"
+                        class="flex-1 py-3 px-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-200"
+                    >
+                        Save Changes
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
