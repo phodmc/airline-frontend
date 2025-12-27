@@ -70,7 +70,14 @@ onMounted(fetchBookings);
                                     >PNR</span
                                 >
                                 <span
-                                    class="font-mono bg-green-600 text-amber-50 tracking-wider px-2 py-0.5 rounded text-2xl"
+                                    v-if="booking.BookingStatus !== 'Cancelled'"
+                                    class="font-mono bg-green-600 text-amber-50 tracking-wider px-2 py-0.5 rounded-full text-2xl"
+                                    >{{ booking.PNR }}</span
+                                >
+
+                                <span
+                                    v-else
+                                    class="font-mono bg-red-600 text-amber-50 tracking-wider px-2 py-0.5 rounded-full text-2xl"
                                     >{{ booking.PNR }}</span
                                 >
                             </div>
@@ -103,7 +110,17 @@ onMounted(fetchBookings);
                                         >
                                     </div>
                                     <span
-                                        class="text-[10px] text-gray-400 mt-2 uppercase tracking-widest"
+                                        v-if="
+                                            booking.BookingStatus !==
+                                            'Cancelled'
+                                        "
+                                        class="text-green-800 bg-green-100 rounded-full transition py-1 px-2 max-w-fit tracking-widest mt-4"
+                                        >{{ booking.BookingStatus }}</span
+                                    >
+
+                                    <span
+                                        v-else
+                                        class="text-red-800 bg-red-100 rounded-full transition py-1 px-2 max-w-fit tracking-widest mt-4"
                                         >{{ booking.BookingStatus }}</span
                                     >
                                 </div>
