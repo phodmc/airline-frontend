@@ -75,7 +75,7 @@ const getAvailabilityClass = (remaining) => {
 };
 
 const getAvailableSeats = (inventory) => {
-    if (!inventoryItems || !Array.items) return 0;
+    if (!inventory) return 0;
 
     const total = inventory.reduce((total, item) => {
         return total + item.SeatsAvailable;
