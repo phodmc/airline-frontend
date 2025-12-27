@@ -67,6 +67,22 @@ const getMinPrice = (inventory) => {
     const prices = inventory.map((item) => item.BaseFare);
     return Math.min(...prices);
 };
+
+const getAvailabilityClass = (remaining) => {
+    if (remaining <= 0) return "text-red-600";
+    if (remaining < 10) return "text-orange-500"; // Warning color
+    return "text-green-600";
+};
+
+const getAvailableSeats = (inventory) => {
+    if (!inventoryItems || !Array.items) return 0;
+
+    const total = inventory.reduce((total, item) => {
+        return total + item.SeatsAvailable;
+    }, 0);
+
+    return total;
+};
 </script>
 
 <template>
@@ -199,6 +215,7 @@ const getMinPrice = (inventory) => {
                 </p>
             </div>
 
+            <!-- actual flights -->
             <div v-else class="grid gap-6">
                 <div
                     v-for="flight in flights"
@@ -273,11 +290,44 @@ const getMinPrice = (inventory) => {
                                     ${{ getMinPrice(flight.inventory_items) }}
                                 </p>
                             </div>
-                            <button
+
+                            <div class="flex flex-col">
+                                <span
+                                    :class="
+                                        getAvailabilityClass(
+                                            flight.TotalSeats -
+                                                flight.SeatsBooked,
+                                        )
+                                    "
+                                    class="text-xs font-bold uppercase"
+                                >
+                                    {{
+                                        getAvailableSeats(
+                                            flight.inventory_items,
+                                        )
+                                    }}
+                                    seats remaining
+                                </span>
+                            </div>
+
+                            <!-- <button
                                 @click="router.push(`/book/${flight.FlightID}`)"
                                 class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition-transform active:scale-95 shadow-lg"
                             >
                                 Book Now
+                            </button> -->
+                            <button
+                                @click="router.push(`/book/${flight.FlightID}`)"
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition-transform active:scale-95 shadow-lg"
+                                :disabled="
+                                    flight.TotalSeats - flight.SeatsBooked <= 0
+                                "
+                            >
+                                {{
+                                    flight.TotalSeats - flight.SeatsBooked <= 0
+                                        ? "Sold Out"
+                                        : "Book Now"
+                                }}
                             </button>
                         </div>
                     </div>
