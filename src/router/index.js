@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { isAdmin } from "@/helpers/auth";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import AdminView from "@/views/AdminView.vue";
@@ -10,13 +11,21 @@ const routes = [
   { path: "/", component: HomeView },
   { path: "/login", component: LoginView },
   { path: "/success/:pnr", component: SuccessView },
-  { path: "/admin", component: AdminView, meta: { requiresAuth: true } },
+  {
+    path: "/admin",
+    component: AdminView,
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
   {
     path: "/my-bookings",
     component: UserBookingView,
     meta: { requiresAuth: true },
   },
-  { path: "/book/:id", component: BookingView, meta: { requiresAuth: true } },
+  {
+    path: "/book/:id",
+    component: BookingView,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({
@@ -28,7 +37,10 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem("token");
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
+  if (to.meta.requiresAdmin && !isAdmin.value) {
+    alert("Access Denied: You don't have admin privilege");
+    next("/");
+  } else if (to.meta.requiresAuth && !isAuthenticated) {
     next("/login");
   } else {
     next();

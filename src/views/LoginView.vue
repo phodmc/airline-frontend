@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import api from "../helpers/api";
 import { checkAdmin, checkLogin } from "../helpers/auth";
 import { useRouter } from "vue-router";
@@ -35,6 +35,10 @@ const handleLogin = async () => {
 const showPassword = () => {
     inputType.value = inputType.value === "password" ? "text" : "password";
 };
+
+onMounted(() => {
+    if (localStorage.getItem("token")) checkAdmin();
+});
 </script>
 
 <template>
