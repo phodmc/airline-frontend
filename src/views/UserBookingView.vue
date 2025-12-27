@@ -1,10 +1,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import api from "@/helpers/api";
+import { useRouter } from "vue-router";
 
 const bookings = ref([]);
 const loading = ref(false);
-
+const router = useRouter();
 const fetchBookings = async () => {
     loading.value = true;
 
@@ -141,7 +142,7 @@ onMounted(fetchBookings);
                             </div>
                             <button
                                 @click="
-                                    router.push(`/book/${booking.FlightID}`)
+                                    router.push(`my-bookings/${booking.PNR}`)
                                 "
                                 class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold transition-transform active:scale-95 shadow-lg"
                             >
