@@ -47,14 +47,14 @@ onMounted(() => {
             @submit.prevent="handleLogin"
             class="bg-white p-8 rounded shadow-lg w-96"
         >
-            <h2 class="text-2xl font-bold mb-6 text-blue-800">Staff Login</h2>
+            <h2 class="text-2xl font-bold mb-6 text-blue-800">Login</h2>
 
             <div class="mb-4">
                 <label class="block text-gray-700">Email</label>
                 <input
                     v-model="email"
                     type="email"
-                    class="w-full border p-2 rounded mt-1"
+                    class="w-full border border-gray-300 p-2 rounded mt-1"
                     required
                 />
             </div>
@@ -63,7 +63,7 @@ onMounted(() => {
                 <label class="block text-gray-700">Password</label>
                 <input
                     v-model="password"
-                    class="w-full border p-2 rounded mt-1"
+                    class="w-full border border-gray-300 p-2 rounded mt-1"
                     required
                     :type="inputType"
                 />
@@ -78,10 +78,19 @@ onMounted(() => {
 
             <button
                 type="submit"
-                class="w-full bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700 transition"
+                class="w-full bg-blue-600 mb-2 text-white font-bold py-2 rounded hover:bg-blue-700 transition"
             >
-                Enter Cockpit
+                Login
             </button>
+
+            <p>
+                New user?
+                <RouterLink
+                    to="/signup"
+                    class="text-sm font-medium text-blue-600 hover:text-blue-500"
+                    >Register here</RouterLink
+                >
+            </p>
 
             <p v-if="errorMessage" class="text-red-500 mt-4 text-sm">
                 {{ errorMessage }}
