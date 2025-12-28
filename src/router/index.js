@@ -11,7 +11,7 @@ import BoookingDetailsView from "@/views/BoookingDetailsView.vue";
 
 const routes = [
   { path: "/", component: HomeView },
-  { path: "/", component: SignupView },
+  { path: "/signup", component: SignupView },
   { path: "/login", component: LoginView },
   { path: "/my-bookings/:pnr", component: BoookingDetailsView },
 
