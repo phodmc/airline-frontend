@@ -62,7 +62,7 @@ onMounted(fetchBookings);
                             <div
                                 class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase max-w-fit mb-4"
                             >
-                                Passengers: {{ booking.passengers.length }}
+                                Passengers: {{ booking.PassengerCount }}
                             </div>
                             <div class="flex items-center gap-2 mb-2">
                                 <span
@@ -86,16 +86,10 @@ onMounted(fetchBookings);
                                     <p
                                         class="text-3xl font-black text-gray-800"
                                     >
-                                        {{
-                                            booking.flight.departure_airport
-                                                .IATACode
-                                        }}
+                                        {{ booking.DepartureCode }}
                                     </p>
                                     <p class="text-sm text-gray-500">
-                                        {{
-                                            booking.flight.departure_airport
-                                                .City
-                                        }}
+                                        {{ booking.DepartureCity }}
                                     </p>
                                 </div>
                                 <div
@@ -128,15 +122,10 @@ onMounted(fetchBookings);
                                     <p
                                         class="text-3xl font-black text-gray-800"
                                     >
-                                        {{
-                                            booking.flight.arrival_airport
-                                                .IATACode
-                                        }}
+                                        {{ booking.ArricalCode }}
                                     </p>
                                     <p class="text-sm text-gray-500">
-                                        {{
-                                            booking.flight.arrival_airport.City
-                                        }}
+                                        {{ booking.ArricalCity }}
                                     </p>
                                 </div>
                             </div>
