@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import { isAdmin } from "@/helpers/auth";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
+import SignupView from "@/views/SignupView.vue";
 import AdminView from "@/views/AdminView.vue";
 import BookingView from "@/views/BookingView.vue";
 import SuccessView from "@/views/SuccessView.vue";
@@ -10,6 +11,7 @@ import BoookingDetailsView from "@/views/BoookingDetailsView.vue";
 
 const routes = [
   { path: "/", component: HomeView },
+  { path: "/", component: SignupView },
   { path: "/login", component: LoginView },
   { path: "/my-bookings/:pnr", component: BoookingDetailsView },
 
